@@ -1,0 +1,131 @@
+  <!doctype html>
+  <html class="no-js">
+    <head>
+      <meta charset="utf-8">
+      <title>CMS Side By Side Preview Template</title>
+      <meta name="description" content="">
+      <meta name="viewport" content="width=device-width">
+      <link rel="stylesheet" href="$CMS_REF(media:"bootstrapmin")$" />
+      <link rel="stylesheet" href="$CMS_REF(media:"alert_css")$" />
+      <link rel="stylesheet" href="$CMS_REF(media:"preview_styles")$" />
+      <!-- $--
+      Added the style to ensure that ng-clock works before the angular js file is loaded
+      --$ -->
+      <style type="text/css">
+        [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+        display: none !important;
+        }
+      </style>
+    </head>
+    <body ng-app="sideBySidePreviewApp">
+      <script type="text/javascript">
+      // $--
+      // The selected base page is the site structure id of the navigation and not the page content id.
+      // This is because we use the id's from the site structure to build our preview hierachy and not id's
+      // from the page store
+      // --$
+      // var selectedBasePageId = '$CMS_VALUE(#global.node.uid)$';
+      // $--
+      // The metadata is always stored at the page content level and NOT at the site structure level.
+      // We should also check the metadata at the current element only and not traverse up the chain.
+      // --$
+      // var pageTypeMetaValue = '$CMS_VALUE(#global.page.meta("md_pagetype", "none"))$';
+      </script>
+      <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+      <![endif]-->
+
+    <div class="container-fluid" ng-controller="PreviewHierarchyCtrl as previewHierarchy" ng-init="previewHierarchy.openMetaDialogForNewPage()" ng-cloak>
+
+    <div class="row preview-menu">
+      <div class="col-md-4 preview-text">
+        Base Alert
+      </div>
+      <div class="col-md-4 preview-text" ng-show="previewHierarchy.isBaseSelected()">
+        <div class="preview-text-override"> » </div>
+            Record Keeper Override
+      </div>
+      <div class="col-md-4 preview-text" ng-show="previewHierarchy.isRKSelected()">
+        <div class="preview-text-override"> » </div>
+            Sponsor Override
+      </div>
+    </div> $-- End <div class="row preview-menu"> --$
+
+    <div class="row preview-menu">
+    <div class="col-md-4 btn-group" dropdown>
+          <div class='input-group'>
+            <input type='text' class='form-control' ng-model='previewHierarchy.selectedBase.label' typeahead="basePage.label for basePage in previewHierarchy.hierarchy | filter:$viewValue | limitTo:8" typeahead-editable='false' typeahead-on-select="previewHierarchy.onBaseSelect($item, $model, $label)"/>
+            <span class='input-group-btn'>
+              <button class='btn btn-default dropdown-toggle' dropdown-toggle>
+                <span class='caret'></span>
+              </button>
+            </span>
+          </div>
+          <ul class="dropdown-menu" role='menu' style='max-height:200px;overflow-y:scroll'>
+            <li ng-repeat="basePage in previewHierarchy.hierarchy | orderBy:'label'">
+              <a href ng-click='previewHierarchy.handleBaseDropDownClick(basePage, $event)'>{{basePage.label}}</a>
+            </li>
+          </ul>
+    </div>$-- End <div class="btn-group" dropdown> --$
+
+      <div class="col-md-4 btn-group" dropdown ng-model="previewHierarchy.selectedBase" ng-show="previewHierarchy.isBaseSelected()">
+        <div class='input-group'>
+            <input type='text' class='form-control' ng-model='previewHierarchy.selectedRK.recordkeeper' typeahead="rk.recordkeeper for rk in previewHierarchy.rkList | filter:$viewValue | limitTo:8" typeahead-editable='false' typeahead-on-select="previewHierarchy.onRKSelect($item, $model, $label)"/>
+            <span class='input-group-btn'>
+              <button class='btn btn-default dropdown-toggle' dropdown-toggle>
+                <span class='caret'></span>
+              </button>
+            </span>
+        </div>
+        <ul class="dropdown-menu" role="menu">
+          <li ng-repeat="rk in previewHierarchy.rkList | orderBy:'recordkeeper'"> <a href="#" ng-click="previewHierarchy.handleRKClick(rk, $event)">{{rk.recordkeeper}}</a></li>
+          <li class="divider"></li>
+          <li><a href="#">Add Page</a></li>
+        </ul>
+      </div>$-- End <div class="btn-group" dropdown> --$
+
+      <div class="col-md-4 btn-group" dropdown ng-model="previewHierarchy.selectedRK" ng-show="previewHierarchy.isRKSelected()">
+        <div class='input-group'>
+            <input type='text' class='form-control' ng-model='previewHierarchy.selectedSponsor.sponsor' typeahead="sponsor.sponsor for sponsor in previewHierarchy.sponsorList | filter:$viewValue | limitTo:8" typeahead-editable='false' typeahead-on-select="previewHierarchy.onSponsorSelect($item, $model, $label)"/>
+            <span class='input-group-btn'>
+              <button class='btn btn-default dropdown-toggle' dropdown-toggle>
+                <span class='caret'></span>
+              </button>
+            </span>
+        </div>
+        <ul class="dropdown-menu" role="menu">
+          <li ng-repeat="sponsor in previewHierarchy.sponsorList | orderBy:'sponsor'"> <a href="#" ng-click="previewHierarchy.handleSponsorClick(sponsor, $event)">{{sponsor.sponsor}}</a></li>
+          <li class="divider"></li>
+          <li><a href="#">Add Page</a></li>
+        </ul>
+      </div> $-- End <div class="btn-group" dropdown> --$
+    </div> $-- End <div class="row preview-menu"> --$
+    <div class="row">
+    <div class="col-md-4 preview-content" ng-model="previewHierarchy.selectedBase" ng-show="previewHierarchy.isBaseSelected()">
+
+  </div> $-- End the container for base page --$
+  $CMS_IF(#global.is("WEBEDIT"))$
+    <div class="col-md-4 preview-content" ng-model="previewHierarchy.selectedRK" ng-show="previewHierarchy.isRKSelected()">
+
+    </div>
+    <div class="col-md-4 preview-content" ng-model="previewHierarchy.selectedSponsor" ng-show="previewHierarchy.isSponsorSelected()">
+
+    </div>
+  $CMS_END_IF$
+  </div> $-- End the row for the containers--$
+  </div> $-- End the preview controller div --$
+
+  <script src="$CMS_REF(media:"angular")$"></script>
+  <script src="$CMS_REF(media:"ui_bootstrap_tplsmin")$"></script>
+  <script src="$CMS_REF(media:"oclazyload")$"></script>
+
+  <script src="$CMS_REF(media:"previewapp")$"></script>
+  <script src="$CMS_REF(media:"dataapp")$"></script>
+  <script src="$CMS_REF(media:"dataservice_js")$"></script>
+  <script src="$CMS_REF(media:"previewplaceholder")$"></script>
+  $CMS_IF(#global.is("WEBEDIT"))$
+  <script src="$CMS_REF(media:"datahelper")$"></script>
+  <script src="$CMS_REF(media:"previewhierachy")$"></script>
+  $CMS_END_IF$
+  </body>
+</html>
