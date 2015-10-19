@@ -30,13 +30,13 @@ describe('ForecastWeather Public API Test',function() {
                     headers: {
                       'User-Agent': 'request'
                     }
-           }
+           };
             request(options, function (error, response, body) {
-                expect(body).to.contain(cityData.name) //Sunnyvale, Madrid
-                assert.equal(cityData.responseCode, response.statusCode)
-                done()
-              })
-            })
+                expect(body).to.contain(cityData.name); //Sunnyvale, Madrid
+                assert.equal(cityData.responseCode, response.statusCode);
+                done();
+              });
+            });
         callback();
     });
   });
