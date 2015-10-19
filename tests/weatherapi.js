@@ -48,16 +48,16 @@ describe('ForecastWeather Public API Test',function() {
           url: cityData.url,//'https://testmyapi-test.apigee.net/weathergrunt/apigee/forecastrss?w=2502265',
           headers: {
             'User-Agent': 'request',
-            'Accept' : cityData.contentType//'text/xml;charset=UTF-8'
+            'Accept': cityData.contentType//'text/xml;charset=UTF-8'
           }
-        }
+        };
         request(options, function (error, response, body) {
-          expect(body).to.contain(cityData.name)
-          assert.equal(cityData.responseCode, response.statusCode)
+          expect(body).to.contain(cityData.name);
+          assert.equal(cityData.responseCode, response.statusCode);
           //expect(response).to.have.header('content-type', cityData.contentType);
-          done()
-        })
-      })
+          done();
+        });
+      });
       callback();
   });
 
